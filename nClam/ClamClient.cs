@@ -191,5 +191,29 @@ namespace nClam
                 return SendAndScanFile(stream);
             }
         }
+
+        /// <summary>
+        /// Gets the status of the service. Keys include POOLS, STATE, THREADS, QUEUE, and MEMSTATES. The ClamAV documentation as of version 0.99.1
+        /// states that the format is subject to change. Any values that are not in the key:value pair combination will be ignored.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string,string> ServerStats()
+        {
+            Dictionary<string, string> clamStats = new Dictionary<string, string>();
+            string[] responseLines = ExecuteClamCommand("STATS").Split('\n');
+            foreach( string line in responseLines )
+            {
+                string[] tokens = line.Split(':');
+                switch( tokens.Length )
+                {
+                    case 2:
+                        clamStats.Add(tokens[0].Trim(), tokens[1].Trim());
+                        tokens[0] = "";
+                        tokens[1] = "";
+                        break;
+                }
+            }
+            return clamStats;
+        }
     }
 }
