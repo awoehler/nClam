@@ -18,10 +18,17 @@ namespace nClam.ConsoleTest
 
             var fileInfo = new FileInfo(args[0]);
 
-            var client = new ClamClient("localhost", 3310);
+            var client = new ClamClient("10.0.130.86", 3310);
 
             Console.WriteLine("GetVersion(): {0}", client.GetVersion());
             Console.WriteLine("GetPing(): {0}", client.Ping());
+
+            ClamServerStats stats = new ClamServerStats(client.ServerStats());
+            Console.WriteLine("ServerStats(): POOLS:           {0}", stats.pools); // clamStats["POOLS"]);
+            Console.WriteLine("ServerStats(): STATE:           {0}", stats.state); // clamStats["STATE"]);
+            Console.WriteLine("ServerStats(): THREADS:         {0}", stats.threads.live); // clamStats["THREADS"]);
+            Console.WriteLine("ServerStats(): QUEUE:           {0}", stats.queueSize); // clamStats["QUEUE"]);
+            Console.WriteLine("ServerStats(): MEMSTATS(used):  {0}", stats.memstats.used ); // clamStats["MEMSTATS"]);
 
             if (!fileInfo.Exists)
             {
